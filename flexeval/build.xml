@@ -1,45 +1,47 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <project name="Flex Ant File Compiler" default="masterbuild" basedir=".">
 
- <!-- Load Environment specific properties from properties file -->
- <property file="build.properties" />
- 
- <!-- Load the flex tasks for compiling the actionScript code and running flexUnit --> 
- <!-- <taskdef resource="flexTasks.tasks" classpath="${FLEX.TASK.DIR}" /> 
+	<!-- Load Environment specific properties from properties file -->
+	<property file="build.properties" />
+
+	<!-- Load the flex tasks for compiling the actionScript code and running flexUnit -->
+	<!-- <taskdef resource="flexTasks.tasks" classpath="${FLEX.TASK.DIR}" /> 
  <taskdef resource="com/adobe/ac/ant/tasks/tasks.properties" classpath="${FLEX.ANT.TASK.DIR}"/> -->
- <taskdef classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" resource="flexTasks.tasks" />
+	<taskdef classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" resource="flexTasks.tasks" />
 
- <!-- Init with echoing some info to the console --> 
-   <target name="init" description="Initializes the build">
-  <tstamp/>
-  <echo message="============================================="/>
-  <echo message="${project.name}-${project.version} [${TODAY}]"/>
-  <echo message="Copyright (c) ${project.year} ${project.owner}"/>
-  <echo message="OS : ${os.name}" />
-  <echo message="Author: ${author}" />
-  <echo message="=============================================="/>
- </target>
+	<!-- Init with echoing some info to the console -->
+	<target name="init" description="Initializes the build">
+		<tstamp />
+		<echo message="=============================================" />
+		<echo message="${project.name}-${project.version} [${TODAY}]" />
+		<echo message="Copyright (c) ${project.year} ${project.owner}" />
+		<echo message="OS : ${os.name}" />
+		<echo message="Author: ${author}" />
+		<echo message="==============================================" />
+	</target>
 
-   <!-- Compile Main application -->
-   <target name="compile" depends="init" description="Compiles the mxml/as source files"> 
-    <mxmlc 
-         file="${main.class}" 
-            output="${swf.export}"
-            actionscript-file-encoding="${ENCODING}"
-            keep-generated-actionscript="false"
-            incremental="false"
-        >
-   <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
-   <source-path path-element="${FLEX_HOME}/frameworks"/>
-   <compiler.source-path path-element="${src.dir}"/>
-   <compiler.include-libraries dir="${basedir}" append="true">
-    <include name="${lib.dir}" />
-   </compiler.include-libraries>
-  </mxmlc>
- </target>
+	<!-- Compile Main application -->
+	<target name="compile" depends="init" description="Compiles the mxml/as source files">
+		<mxmlc file="${main.class}" output="${swf.export}" actionscript-file-encoding="${ENCODING}" keep-generated-actionscript="false" incremental="false">
+			<load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
+			<source-path path-element="${FLEX_HOME}/frameworks" />
+			<compiler.source-path path-element="${src.dir}" />
+			<compiler.include-libraries dir="${basedir}" append="true">
+				<include name="${lib.dir}" />
+			</compiler.include-libraries>
+		</mxmlc>
+	</target>
 
- <!-- Run unit test -->   
- <!-- <target name="unit-tests" depends="init" description="Compiles and runs the tests">
+	<target name="swc" description="Compile the SWC file">
+		<compc output="${bin.dir}/flexeval.swc">
+			<!-- include our Class packages into the build (com folder) -->
+			<include-sources dir="${src.dir}" includes="*">
+			</include-sources>
+		</compc>
+	</target>
+
+	<!-- Run unit test -->
+	<!-- <target name="unit-tests" depends="init" description="Compiles and runs the tests">
   <mxmlc 
             file="${flex.unit.runner}" 
             output="${flex.unit.swf}"
@@ -69,95 +71,56 @@
      <report format="frames" todir="${report.dir}/html/"/>
   </junitreport>
  </target>
- -->   
- <!-- Generate ASDOC -->   
- <target name="doc" depends="init" description="Generates the asdoc of the source files">
-	<exec executable="${FLEX_HOME}/bin/asdoc">
-		<arg line="-doc-sources ${src.dir}" />
-		<arg line="-source-path ${src.dir}" />
-	    <arg line="-main-title '${asdoc.docsname}'" />
-	    <arg line="-window-title '${asdoc.docsname}'" />
-	    <arg line="-output '${docs.asdoc.dir}'" />
-	    <arg line="-footer 'CONFIDENTIAL. Copyright 2007 to-fuse'" />
-	</exec>
- </target>
-	    	
- <!-- Clean output dirs -->  
- <target name="clean" description="clean all generated files">
-  <delete includeemptydirs="true">
-   <fileset dir="${docs.asdoc.dir}" includes="**/*"/>
-   <fileset dir="${bin.dir}" includes="**/*" />
-   <!--<fileset dir="${report.dir}/html" includes="**/*" />-->
-  </delete> 
-  <!--<delete>
+ -->
+	<!-- Generate ASDOC -->
+	<target name="doc" depends="init" description="Generates the asdoc of the source files">
+		<exec executable="${FLEX_HOME}/bin/asdoc">
+			<arg line="-doc-sources ${src.dir}" />
+			<arg line="-source-path ${src.dir}" />
+			<arg line="-main-title '${asdoc.docsname}'" />
+			<arg line="-window-title '${asdoc.docsname}'" />
+			<arg line="-output '${docs.asdoc.dir}'" />
+			<arg line="-footer 'CONFIDENTIAL. Copyright 2007 to-fuse'" />
+		</exec>
+	</target>
+
+	<!-- Clean output dirs -->
+	<target name="clean" description="clean all generated files">
+		<delete includeemptydirs="true">
+			<fileset dir="${docs.asdoc.dir}" includes="**/*" />
+			<fileset dir="${bin.dir}" includes="**/*" />
+			<fileset dir="${deploy.dir}" includes="**/*" />
+			<!--<fileset dir="${report.dir}/html" includes="**/*" />-->
+		</delete>
+		<!--<delete>
    <fileset dir="${report.dir}" includes="**/*.xml" />
   </delete>-->
- </target>  
- 
- <!-- Create HTML wrapper -->  
- <target name="wrapper" depends="compile" description="Creates the HTML wrapper">
-  <!-- Copy the html-wrapper dir except the index.template.html -->
-  <copy todir="${bin.dir}">
-      <fileset dir="${wrapper.dir}">
-       <exclude name="**/index.template.html" />
-      </fileset>
-     </copy>
-  <!-- Copy and rename the index.template.html -->
-     <copy file="${wrapper.dir}/index.template.html"
-      tofile="${html.file}" />
-     
-  <!-- Replace placeholders in the html with our variables -->
-  <replaceregexp 
-      file="${html.file}"
-      flags="gs"
-      match="\$\{width\}"
-      replace="100%"/>
-     <replaceregexp 
-      file="${html.file}"
-      flags="gs"
-      match="\$\{height\}"
-      replace="100%"/>
-     <replaceregexp 
-      file="${html.file}"
-      flags="gs"
-      match="\$\{title\}"
-      replace="{project.name}"
-      encoding="utf-8"/>
-     <replaceregexp 
-      file="${html.file}"
-      flags="gs"
-      match="\$\{version_major\}"
-      replace="9"/>
-     <replaceregexp 
-      file="${html.file}"
-      flags="gs"
-      match="\$\{version_minor\}"
-      replace="0"/>
-     <replaceregexp 
-      file="${html.file}"
-      flags="gs"
-      match="\$\{version_revision\}"
-      replace="0"/>
-     <replaceregexp 
-      file="${html.file}"
-      flags="gs"
-      match="\$\{application\}"
-      replace="${application.name}"/>
-     <replaceregexp 
-      file="${html.file}"
-      flags="gs"
-      match="\$\{bgcolor\}"
-      replace="#FFFFFF"/>
-     <replaceregexp 
-      file="${html.file}"
-      flags="gs"
-      match="\$\{swf\}"
-      replace="${application.name}"/> 
-    </target>
- 
- <!-- Run all, default -->  
- <target name="masterbuild"
-          depends="clean, compile, wrapper"
-          description="Complete build in efficient sequence"/>
+	</target>
+
+	<!-- Create HTML wrapper -->
+	<target name="wrapper" depends="compile" description="Creates the HTML wrapper">
+		<!-- Copy the html-wrapper dir except the index.template.html -->
+		<copy todir="${deploy.dir}">
+			<fileset dir="${wrapper.dir}">
+				<exclude name="**/index.template.html" />
+			</fileset>
+		</copy>
+		<!-- Copy and rename the index.template.html -->
+		<copy file="${wrapper.dir}/index.template.html" tofile="${html.file}" />
+
+		<!-- Replace placeholders in the html with our variables -->
+		<replaceregexp file="${html.file}" flags="gs" match="\$\{width\}" replace="100%" />
+		<replaceregexp file="${html.file}" flags="gs" match="\$\{height\}" replace="100%" />
+		<replaceregexp file="${html.file}" flags="gs" match="\$\{title\}" replace="{project.name}" encoding="utf-8" />
+		<replaceregexp file="${html.file}" flags="gs" match="\$\{version_major\}" replace="9" />
+		<replaceregexp file="${html.file}" flags="gs" match="\$\{version_minor\}" replace="0" />
+		<replaceregexp file="${html.file}" flags="gs" match="\$\{version_revision\}" replace="0" />
+		<replaceregexp file="${html.file}" flags="gs" match="\$\{application\}" replace="${application.name}" />
+		<replaceregexp file="${html.file}" flags="gs" match="\$\{bgcolor\}" replace="#FFFFFF" />
+		<replaceregexp file="${html.file}" flags="gs" match="\$\{swf\}" replace="${application.name}" />
+	</target>
+
+	<!-- Run all, default -->
+	<target name="masterbuild" depends="clean, wrapper, swc" description="Complete build in efficient sequence" />
 
 </project>
