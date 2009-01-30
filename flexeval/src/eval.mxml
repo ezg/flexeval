@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical"
+	creationComplete="creationHandler()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			private function creationHandler():void {
+				var exp:Expression = new Expression("(x + y)/2");
+		 
+				var variables:Array = new Array();
+				variables["x"] = 4.32;
+				variables["y"] = 342.1;
+		 		
+		 		var result:Number = exp.eval(variables);
+		 		trace(result);
+			}
+			
+			private function execute():void {
+				var exp:Expression = new Expression(tiForumula.text);
+				
+				var variablesText:String = taVariables.text;
+				var tmp:Array = variablesText.split("\r");
+				var variables:Array = new Array();
+				
+				for (var i:int = 0; i < tmp.length; i++) {
+					var tmp2:Array = String(tmp[i]).split("=");
+					variables[tmp2[0]] = parseFloat(String(tmp2[1]));
+				}
+				
+				var result:Number = exp.eval(variables);
+				tiResult.text = result.toString();
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:TextInput id="tiForumula" width="300"/>
+	<mx:TextArea id="taVariables" width="300" height="200"/>
+	<mx:TextInput id="tiResult" width="300" editable="false"/>
+	
+	<mx:Button id="btnExecute" label="eval" click="execute()"/>
+	
+</mx:Application>
