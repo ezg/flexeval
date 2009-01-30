@@ -5,6 +5,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import ch.tofuse.eval.Expression;
 			import mx.collections.ArrayCollection;
 			
 			private function creationHandler():void {
