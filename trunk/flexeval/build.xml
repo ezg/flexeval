@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<project name="Flex Ant File Compiler" default="masterbuild" basedir=".">
+<project name="flexeval build" default="masterbuild" basedir=".">
 
 	<!-- Load Environment specific properties from properties file -->
 	<property file="build.properties" />
