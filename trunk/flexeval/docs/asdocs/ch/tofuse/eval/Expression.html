@@ -47,21 +47,107 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
   Example of use:
   
   <PRE>
-  Expression exp = new Expression(&quot;(x + y)/2&quot;);
+  var exp:Expression = new Expression(&quot;(x + y)/2&quot;);
+  var variables:Array = new Array();  
+  variables[&quot;x&quot;] = 4.32;
+  variables[&quot;y&quot;] = 342.1;
   
-  Map&lt;String, BigDecimal&gt; variables = new HashMap&lt;String, BigDecimal&gt;();
-  variables.put(&quot;x&quot;, new BigDecimal(&quot;4.32&quot;));
-  variables.put(&quot;y&quot;, new BigDecimal(&quot;342.1&quot;));
+  var result:Number = exp.eval(variables);
+  trace(result);
   
-  BigDecimal result = exp.eval(variables);
   
-  System.out.println(result);
   </PRE>
   
   <P>
   The following operators are supported:
   <UL>
-  <LI>The basic arithmetic operations as provided by the {<p></p>
+  <LI>The basic arithmetic operations as provided by the
+  class:
+  <DL>
+  <DT>+</DT>
+  <DD>addition</DD>
+  <DT>-</DT>
+  <DD>subtraction</DD>
+  <DT>/DT>
+  <DD>multiplication</DD>
+  <DT>/</DT>
+  <DD>division (rounds to 34 digits)</DD>
+  <DT>%</DT>
+  <DD>the remainder when dividing the preceding number by the following number
+  (this is not module - the result can be negative, rounds to 34 digits)</DD>
+  <DT>abs</DT>
+  <DD>absolute of the following number (negative numbers have their sign
+  reversed)</DD>
+  <DT>pow</DT>
+  <DD>raise the preceding number to the power of the following number (this
+  can only raise to power of positive integers or zero)</DD>
+  <DT>int</DT>
+  <DD>round the following number to an integer</DD>
+  </DL>
+  <BR>
+  </LI>
+  <LI>Ternary (or conditional) expressions. <BR>
+  <I>condition ? value-if-condition-is-true : value-if-condition-is-true</I><BR>
+  For example:<BR>
+  <CODE>x &gt; y ? x : y</CODE><BR>
+  Yields the larger of the two variables x and y<BR>
+  <BR>
+  </LI>
+  <LI>The following comparison operations:
+  <DL>
+  <DT>&lt;</DT>
+  <DD>less than</DD>
+  <DT>&lt;=</DT>
+  <DD>less than or equals</DD>
+  <DT>==</DT>
+  <DD>equals</DD>
+  <DT>&gt;</DT>
+  <DD>greater than</DD>
+  <DT>&gt;=</DT>
+  <DD>greater than or equals</DD>
+  <DT>!=</DT>
+  <DT>&lt;&gt;</DT>
+  <DD>not equals</DD>
+  </DL>
+  </LI>
+  <BR>
+  <LI>The following boolean operations:
+  <DL>
+  <DT>&amp;&amp;</DT>
+  <DD>and</DD>
+  <DT>||</DT>
+  <DD>or</DD>
+  </DL>
+  </LI>
+  </UL>
+  
+  <P>
+  Comparison and boolean operation yield 1 for true, or 0 for false if used
+  directly.
+  </P>
+  
+  <P>
+  Expressions are evaluated using the precedence rules found in Java, and
+  parentheses can be used to control the evaluation order.
+  <P>
+  <P>
+  Example expressions:
+  
+  <PRE>
+  2
+  2+2
+  100/2
+  x/100 17.5
+  2 pow 32 - 1
+  2 pow (32 - 1)
+  2 pow int 21.5
+  abs -1.23E-12
+  x &gt; y ? x : y
+  x &gt; y &amp;&amp; x != 4 ? x : y
+  y &gt; 4 ? 4 : z/3
+  </PRE>
+  
+  <p></p>
 <br>
 <hr>
 </div>

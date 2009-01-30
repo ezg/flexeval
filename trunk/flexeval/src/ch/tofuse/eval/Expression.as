@@ -23,21 +23,21 @@ package ch.tofuse.eval {
 	 * Example of use:
 	 * 
 	 * <PRE>
-	 * Expression exp = new Expression(&quot;(x + y)/2&quot;);
+	 * var exp:Expression = new Expression(&quot;(x + y)/2&quot;);
+	 * var variables:Array = new Array();		
+	 * variables[&quot;x&quot;] = 4.32;
+	 * variables[&quot;y&quot;] = 342.1;
 	 * 
-	 * Map&lt;String, BigDecimal&gt; variables = new HashMap&lt;String, BigDecimal&gt;();
-	 * variables.put(&quot;x&quot;, new BigDecimal(&quot;4.32&quot;));
-	 * variables.put(&quot;y&quot;, new BigDecimal(&quot;342.1&quot;));
+	 * var result:Number = exp.eval(variables);
+	 * trace(result);
 	 * 
-	 * BigDecimal result = exp.eval(variables);
 	 * 
-	 * System.out.println(result);
 	 * </PRE>
 	 * 
 	 * <P>
 	 * The following operators are supported:
 	 * <UL>
-	 * <LI>The basic arithmetic operations as provided by the {@link BigDecimal}
+	 * <LI>The basic arithmetic operations as provided by the
 	 * class:
 	 * <DL>
 	 * <DT>+</DT>

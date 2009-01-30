@@ -121,6 +121,6 @@
 	</target>
 
 	<!-- Run all, default -->
-	<target name="masterbuild" depends="clean, wrapper, swc" description="Complete build in efficient sequence" />
+	<target name="masterbuild" depends="clean, wrapper, swc, doc" description="Complete build in efficient sequence" />
 
 </project>
