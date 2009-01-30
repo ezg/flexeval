@@ -5,8 +5,9 @@
  <property file="build.properties" />
  
  <!-- Load the flex tasks for compiling the actionScript code and running flexUnit --> 
- <taskdef resource="flexTasks.tasks" classpath="${FLEX.TASK.DIR}" /> 
- <taskdef resource="com/adobe/ac/ant/tasks/tasks.properties" classpath="${FLEX.ANT.TASK.DIR}"/>
+ <!-- <taskdef resource="flexTasks.tasks" classpath="${FLEX.TASK.DIR}" /> 
+ <taskdef resource="com/adobe/ac/ant/tasks/tasks.properties" classpath="${FLEX.ANT.TASK.DIR}"/> -->
+ <taskdef classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" resource="flexTasks.tasks" />
 
  <!-- Init with echoing some info to the console --> 
    <target name="init" description="Initializes the build">
@@ -38,7 +39,7 @@
  </target>
 
  <!-- Run unit test -->   
- <target name="unit-tests" depends="init" description="Compiles and runs the tests">
+ <!-- <target name="unit-tests" depends="init" description="Compiles and runs the tests">
   <mxmlc 
             file="${flex.unit.runner}" 
             output="${flex.unit.swf}"
@@ -68,41 +69,30 @@
      <report format="frames" todir="${report.dir}/html/"/>
   </junitreport>
  </target>
-    
+ -->   
  <!-- Generate ASDOC -->   
  <target name="doc" depends="init" description="Generates the asdoc of the source files">
-  <java className="${asdoc.tool}" fork="true" failonerror="true">
-   <classpath >
-    <fileset dir="${FLEX_HOME}/asdoc/lib" includes="*.jar" />
-    <fileset dir="${FLEX_HOME}/lib" includes="*.jar" />
-   </classpath>
-   <jvmarg line="-Dapplication.home=${FLEX_HOME} -Xms32m -Xmx768m -Dsun.io.useCanonCaches=false -Xbootclasspath/p:${FLEX_HOME}/asdoc/lib/xalan.jar"/>
-      <arg line="-library-path+='${basedir}/${lib.dir}/Cairngorm.swc'"/>
-      <arg line="-library-path+='${basedir}/${lib.dir}/flexunit.swc'"/>
-      <arg line="-library-path+='${basedir}/${lib.dir}/corelib.swc'"/>
-      <arg line="-library-path+='${basedir}/${lib.dir}/FlexUnitOptional.swc'"/>
-      <arg line="-library-path+='${FLEX_HOME}/frameworks/libs'"/>
-      <arg line="-library-path+='${FLEX_HOME}/frameworks/locale/en_US'"/>
-   <arg line="-doc-sources '${src.dir}'" />
-   <arg line="-main-title '${asdoc.docsname}'" />
-   <arg line="-window-title '${asdoc.docsname}'" />
-   <arg line="-output '${docs.asdoc.dir}'" />
-   <arg line="-footer 'CONFIDENTIAL. Copyright 2007 Your Company'" />
-  </java>
-
+	<exec executable="${FLEX_HOME}/bin/asdoc">
+		<arg line="-doc-sources ${src.dir}" />
+		<arg line="-source-path ${src.dir}" />
+	    <arg line="-main-title '${asdoc.docsname}'" />
+	    <arg line="-window-title '${asdoc.docsname}'" />
+	    <arg line="-output '${docs.asdoc.dir}'" />
+	    <arg line="-footer 'CONFIDENTIAL. Copyright 2007 to-fuse'" />
+	</exec>
  </target>
- 
+	    	
  <!-- Clean output dirs -->  
  <target name="clean" description="clean all generated files">
   <delete includeemptydirs="true">
    <fileset dir="${docs.asdoc.dir}" includes="**/*"/>
    <fileset dir="${bin.dir}" includes="**/*" />
-   <fileset dir="${report.dir}/html" includes="**/*" />
-    </delete> 
-    <delete>
-    <fileset dir="${report.dir}" includes="**/*.xml" />
-    </delete>
-    </target>  
+   <!--<fileset dir="${report.dir}/html" includes="**/*" />-->
+  </delete> 
+  <!--<delete>
+   <fileset dir="${report.dir}" includes="**/*.xml" />
+  </delete>-->
+ </target>  
  
  <!-- Create HTML wrapper -->  
  <target name="wrapper" depends="compile" description="Creates the HTML wrapper">
@@ -167,7 +157,7 @@
  
  <!-- Run all, default -->  
  <target name="masterbuild"
-          depends="clean, compile, unit-tests, wrapper"
+          depends="clean, compile, wrapper"
           description="Complete build in efficient sequence"/>
 
 </project>

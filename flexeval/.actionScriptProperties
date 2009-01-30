@@ -9,7 +9,7 @@
 <sourceAttachmentPath/>
 </compiler>
 <applications>
-<application path="eval.mxml"/>
+<application path="flexeval.mxml"/>
 </applications>
 <modules/>
 <buildCSSFiles/>
