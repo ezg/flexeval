@@ -517,7 +517,7 @@ class INTOperator extends Operator
 	}
 	public override function perform(value1:Number, value2:Number,
 			value3:Number):Number {
-		return new parseInt(value1.toString());
+		return parseInt(value1.toString());
 	}
 }
 
