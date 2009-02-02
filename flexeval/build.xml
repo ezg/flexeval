@@ -74,7 +74,7 @@
  -->
 	<!-- Generate ASDOC -->
 	<target name="doc" depends="init" description="Generates the asdoc of the source files">
-		<exec executable="${FLEX_HOME}/bin/asdoc">
+		<exec executable="${asdoc.tool}">
 			<arg line="-doc-sources ${src.dir}" />
 			<arg line="-source-path ${src.dir}" />
 			<arg line="-main-title '${asdoc.docsname}'" />
